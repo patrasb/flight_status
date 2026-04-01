@@ -19,7 +19,14 @@ type VirtualRow =
   | { kind: "flight"; flight: Flight };
 
 function Flightboard() {
-  const { flights, isLoading, isFetching, error, refetch } = useGetFlights();
+  const {
+    flights,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+    toggleSimulateError,
+  } = useGetFlights();
   const [activeStatus, setActiveStatus] = useState<StatusFilter>("all");
   const [groupKey] = useState<GroupKey>("gate");
   const parentRef = useRef<HTMLDivElement>(null);
@@ -53,10 +60,6 @@ function Flightboard() {
     return <FlightboardSkeleton />;
   }
 
-  if (error) {
-    return <FlightboardError message={error.message} refetch={refetch} />;
-  }
-
   return (
     <Card className="w-9/12 mx-auto">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -71,16 +74,29 @@ function Flightboard() {
             onClick={() => refetch()}
           >
             <RefreshCcwDotIcon className="w-4 h-4" />
+            {isFetching && (
+              <span className="text-xs text-muted-foreground animate-pulse">
+                Refreshing…
+              </span>
+            )}
           </Button>
-          {isFetching && (
-            <span className="text-xs text-muted-foreground animate-pulse">
-              Refreshing…
-            </span>
+          {!error && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                toggleSimulateError();
+                refetch();
+              }}
+            >
+              Simulate Error
+            </Button>
           )}
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex flex-col gap-4">
+        {error && <FlightboardError message={error.message} />}
         <div className="flex gap-2 pb-4">
           {STATUS_OPTIONS.map((status) => (
             <Button

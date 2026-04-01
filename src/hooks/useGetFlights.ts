@@ -8,6 +8,7 @@ import {
   getFlightTerminal,
 } from "@/utils/getFlightDetails";
 
+// run this project to generate flight data: https://github.com/AmericanAirlines/Flight-Engine
 const API_URL = "http://localhost:4000/flights?date=2026-04-01";
 const POLL_INTERVAL_MS = 30_000;
 
@@ -24,6 +25,7 @@ function useGetFlights() {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const simulateErrorRef = useRef(false);
 
   const isLoading = isFetching && rawFlights.length === 0;
 
@@ -59,7 +61,16 @@ function useGetFlights() {
 
     try {
       setIsFetching(true);
+      if (simulateErrorRef.current) {
+        simulateErrorRef.current = false;
+        throw new Error("Simulated error (toggled on)");
+      }
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const response = await fetch(API_URL, { signal: controller.signal });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       const data = await response.json();
       setRawFlights(data);
       setError(null);
@@ -72,7 +83,18 @@ function useGetFlights() {
     }
   }
 
-  return { flights, isLoading, isFetching, error, refetch: fetchFlights };
+  function toggleSimulateError() {
+    simulateErrorRef.current = !simulateErrorRef.current;
+  }
+
+  return {
+    flights,
+    isLoading,
+    isFetching,
+    error,
+    refetch: fetchFlights,
+    toggleSimulateError,
+  };
 }
 
 export default useGetFlights;
