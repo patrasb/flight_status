@@ -1,7 +1,11 @@
 import Flightboard from "./pages/Flightboard";
 
 function App() {
-  return <Flightboard />;
+  return (
+    <div className="p-4">
+      <Flightboard />
+    </div>
+  );
 }
 
 export default App;

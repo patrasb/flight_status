@@ -5,6 +5,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+}
+#root {
+  height: 100%;
+}
 :root {
   --text: #6b6375;
   --text-h: #08060d;
