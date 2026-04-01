@@ -1,4 +1,3 @@
-import "./App.css";
 import Flightboard from "./pages/Flightboard";
 
 function App() {

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import type { Flight } from "../types/Flight.type";
+import type { Flight } from "@/types/Flight.type";
+import {
+  getFlightDuration,
+  getFlightStatus,
+  getFlightGate,
+  getDepartureTime,
+} from "@/utils/getFlightDetails";
 
-const API_URL = "https://jsonplaceholder.typicode.com/posts";
+const API_URL = "http://localhost:4000/flights?date=2026-04-01";
+
 function useGetFlights() {
   const [flights, setFlights] = useState<Flight[]>([]);
 
@@ -11,10 +18,13 @@ function useGetFlights() {
       const data = await response.json();
       setFlights(
         data.map((item: any) => ({
-          id: item.id,
-          group: item.userId,
-          title: item.title,
-          body: item.body,
+          flightNumber: item?.flightNumber,
+          origin: item?.origin?.city,
+          destination: item?.destination?.city,
+          duration: getFlightDuration(item?.duration),
+          status: getFlightStatus(item?.flightNumber),
+          gate: getFlightGate(item?.flightNumber),
+          departureTime: getDepartureTime(item?.departureTime),
         })),
       );
     };
