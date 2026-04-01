@@ -23,4 +23,14 @@ function getFlightDuration(duration: {
   return `${duration.hours ? duration.hours + "h" : ""} ${duration.minutes ? duration.minutes + "m" : ""}`.trim();
 }
 
-export { getFlightStatus, getFlightGate, getDepartureTime, getFlightDuration };
+function getFlightTerminal(flightNumber: string): string {
+  return `Terminal ${(parseInt(flightNumber, 10) % 4) + 1}`;
+}
+
+export {
+  getFlightStatus,
+  getFlightGate,
+  getDepartureTime,
+  getFlightDuration,
+  getFlightTerminal,
+};

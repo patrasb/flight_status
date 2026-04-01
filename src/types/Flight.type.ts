@@ -6,6 +6,7 @@ type Flight = {
   status: "On Time" | "Delayed" | "Cancelled";
   gate: string;
   departureTime: string;
+  terminal: string;
 };
 
 export type { Flight };

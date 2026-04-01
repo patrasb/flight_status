@@ -37,6 +37,10 @@ function FlightItem({ flight }: { flight: Flight }) {
         <p>
           <span className="text-muted-foreground">Gate:</span> {flight.gate}
         </p>
+        <p>
+          <span className="text-muted-foreground">Terminal:</span>{" "}
+          {flight.terminal}
+        </p>
       </CardContent>
     </Card>
   );
